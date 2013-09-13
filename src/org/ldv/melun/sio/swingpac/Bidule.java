@@ -70,6 +70,8 @@ public class Bidule extends JPanel {
    */
   final int NB_MINMAL_PIXELS_VIE = 3;
 
+  int nbCollision = 0;
+
   /**
    * Déclaration du Template/Hook
    * 
@@ -168,24 +170,25 @@ public class Bidule extends JPanel {
    * appelé après un déplacement. Vérifie si impacts, et préviens les objets
    * touchés.
    */
-  private void manageCollisions() {
-    // ai-je touché d'autres bidules ?
-    List<Bidule> bidules = getCollisions();
-    for (Bidule bidule : bidules) {
-      if (bidule.isGoDown()
-          && bidule.getY() + bidule.getHeight() >= this.getY())
-        bidule.tuEstouchePar(this);
-      else if (bidule.isGoUp()
-          && bidule.getY() <= this.getY() + this.getHeight())
-        bidule.tuEstouchePar(this);
-      else if (bidule.isGoRight()
-          && bidule.getX() + bidule.getWidth() >= this.getX())
-        bidule.tuEstouchePar(this);
-      else if (bidule.isGoLeft()
-          && bidule.getX() <= this.getWidth() + this.getX())
-        bidule.tuEstouchePar(this);
-    }
-  }
+	private void manageCollisions() {
+		// ai-je touché d'autres bidules ?
+		List<Bidule> bidules = getCollisions();
+		for (Bidule bidule : bidules) {
+			if (bidule.isGoDown()
+					&& bidule.getY() + bidule.getHeight() >= this.getY()) {
+				bidule.tuEstouchePar(this);
+			} else if (bidule.isGoUp()
+					&& bidule.getY() <= this.getY() + this.getHeight()) {
+				bidule.tuEstouchePar(this);
+			} else if (bidule.isGoRight()
+					&& bidule.getX() + bidule.getWidth() >= this.getX()) {
+				bidule.tuEstouchePar(this);
+			} else if (bidule.isGoLeft()
+					&& bidule.getX() <= this.getWidth() + this.getX()) {
+				bidule.tuEstouchePar(this);
+			}
+		}
+	}
 
   /**
    * Vérifie si l'instance courante gagne la partie. Afffiche un message si
@@ -219,10 +222,13 @@ public class Bidule extends JPanel {
    * @param biduleImpacteur
    *          l'objet qui vient de rentrer en collision avec moi
    */
+  
   public void tuEstouchePar(Bidule biduleImpacteur) {
     // je retrécis
     this.setBounds(getX() + incX, getY() + incY, getWidth() - 1,
-        getHeight() - 1);
+        getHeight() - 1); 
+    
+     
 
     // TODO (plus difficile) : augmenter la taille de biduleImpacteur (dans la
     // limite du quart (un pourcentage) de la taille initiale)
@@ -234,13 +240,15 @@ public class Bidule extends JPanel {
       // sucide...
       this.stop();
       System.out.println("Je meurs :-(   " + this.name);
+      System.out.println("Nombre d'impacts "+nbCollision);
       getParent().remove(this);
     }
 
     doAfterImpactByOther();
   }
 
-  /**
+
+/**
    * établir une stratégie après impact ; un autre bidule vient de (me) toucher
    * (toucher l'objet courant)
    */
